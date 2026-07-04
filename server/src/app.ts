@@ -11,6 +11,7 @@ import productsRouter from './modules/products/routes.js'
 import servicesRouter from './modules/services/routes.js'
 import { adminProductsRouter, adminServicesRouter } from './modules/products/adminRoutes.js'
 import uploadsRouter from './modules/uploads/routes.js'
+import measurementsRouter from './modules/measurements/routes.js'
 
 const app = express()
 
@@ -24,6 +25,7 @@ app.get('/health', (_req, res) => {
   res.json({ status: 'ok' })
 })
 
+app.use('/api/me/measurements', measurementsRouter)
 app.use('/api/me', usersRouter)
 app.use('/api/products', productsRouter)
 app.use('/api/services', servicesRouter)
