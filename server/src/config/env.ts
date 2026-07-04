@@ -5,6 +5,8 @@ const schema = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
   PORT: z.coerce.number().default(8080),
   CLIENT_ORIGIN: z.string().default('http://localhost:5173'),
+  FIREBASE_SERVICE_ACCOUNT_B64: z.string().optional(),
+  FIREBASE_STORAGE_BUCKET: z.string().optional(),
 })
 
 const result = schema.safeParse(process.env)

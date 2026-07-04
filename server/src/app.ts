@@ -6,6 +6,7 @@ import { allowedOrigins } from './config/env.js'
 import logger from './lib/logger.js'
 import { generalRateLimit } from './middleware/rateLimits.js'
 import { notFoundHandler, errorHandler } from './middleware/errors.js'
+import usersRouter from './modules/users/routes.js'
 
 const app = express()
 
@@ -18,6 +19,8 @@ app.use(generalRateLimit)
 app.get('/health', (_req, res) => {
   res.json({ status: 'ok' })
 })
+
+app.use('/api/me', usersRouter)
 
 app.use(notFoundHandler)
 app.use(errorHandler)
