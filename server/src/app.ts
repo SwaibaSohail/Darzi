@@ -7,6 +7,8 @@ import logger from './lib/logger.js'
 import { generalRateLimit } from './middleware/rateLimits.js'
 import { notFoundHandler, errorHandler } from './middleware/errors.js'
 import usersRouter from './modules/users/routes.js'
+import productsRouter from './modules/products/routes.js'
+import servicesRouter from './modules/services/routes.js'
 
 const app = express()
 
@@ -21,6 +23,8 @@ app.get('/health', (_req, res) => {
 })
 
 app.use('/api/me', usersRouter)
+app.use('/api/products', productsRouter)
+app.use('/api/services', servicesRouter)
 
 app.use(notFoundHandler)
 app.use(errorHandler)
