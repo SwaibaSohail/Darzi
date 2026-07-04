@@ -5,7 +5,8 @@ import { LoginPage } from './features/auth/LoginPage'
 import { RegisterPage } from './features/auth/RegisterPage'
 import { ProductsPage } from './features/catalog/ProductsPage'
 import { ProductDetailPage } from './features/catalog/ProductDetailPage'
-import { RequireAdmin } from './features/auth/guards'
+import { RequireAuth, RequireAdmin } from './features/auth/guards'
+import { ProfilePage } from './features/profile/ProfilePage'
 import { AdminLayout } from './features/admin/AdminLayout'
 import { ProductsAdminPage } from './features/admin/ProductsAdminPage'
 import { ProductFormPage } from './features/admin/ProductFormPage'
@@ -36,7 +37,14 @@ function Nav() {
       )}
       {user ? (
         <>
-          <span className="text-secondary">{profile?.name ?? user.email}</span>
+          <NavLink
+            to="/profile"
+            className={({ isActive }) =>
+              `transition-colors duration-150 ${isActive ? 'text-accent' : 'text-secondary hover:text-accent'}`
+            }
+          >
+            {profile?.name ?? user.email}
+          </NavLink>
           <button
             type="button"
             onClick={logout}
@@ -81,6 +89,14 @@ function App() {
               <div className="text-center py-20">
                 <p className="font-display text-2xl text-primary">Custom stitching arrives soon.</p>
               </div>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <RequireAuth>
+                <ProfilePage />
+              </RequireAuth>
             }
           />
           <Route
