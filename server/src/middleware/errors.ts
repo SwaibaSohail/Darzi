@@ -1,4 +1,5 @@
 import type { Request, Response, NextFunction } from 'express'
+import multer from 'multer'
 import { AppError } from '../lib/errors.js'
 import logger from '../lib/logger.js'
 
@@ -24,6 +25,13 @@ export function errorHandler(
         message: err.message,
       },
     })
+    return
+  }
+
+  if (err instanceof multer.MulterError) {
+    const message =
+      err.code === 'LIMIT_FILE_SIZE' ? 'Image must be 5 MB or smaller' : 'Invalid upload'
+    res.status(400).json({ error: { code: 'VALIDATION', message } })
     return
   }
 

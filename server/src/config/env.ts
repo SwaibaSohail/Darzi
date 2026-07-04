@@ -7,6 +7,9 @@ const schema = z.object({
   CLIENT_ORIGIN: z.string().default('http://localhost:5173'),
   FIREBASE_SERVICE_ACCOUNT_B64: z.string().optional(),
   FIREBASE_STORAGE_BUCKET: z.string().optional(),
+  CLOUDINARY_CLOUD_NAME: z.string().optional(),
+  CLOUDINARY_API_KEY: z.string().optional(),
+  CLOUDINARY_API_SECRET: z.string().optional(),
 })
 
 const result = schema.safeParse(process.env)
