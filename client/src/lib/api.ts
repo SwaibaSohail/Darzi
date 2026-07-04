@@ -18,6 +18,30 @@ interface ApiOptions {
   body?: unknown
 }
 
+export async function apiUpload<T>(path: string, file: File, field = 'image'): Promise<T> {
+  const headers: Record<string, string> = {}
+  const user = auth.currentUser
+  if (user) {
+    headers.Authorization = `Bearer ${await user.getIdToken()}`
+  }
+  const form = new FormData()
+  form.append(field, file)
+  const res = await fetch(`${BASE_URL}${path}`, { method: 'POST', headers, body: form })
+  if (!res.ok) {
+    let code = 'UNKNOWN'
+    let message = `Upload failed (${res.status})`
+    try {
+      const data = await res.json()
+      code = data?.error?.code ?? code
+      message = data?.error?.message ?? message
+    } catch {
+      // non-JSON error body — keep defaults
+    }
+    throw new ApiError(res.status, code, message)
+  }
+  return res.json() as Promise<T>
+}
+
 export async function apiFetch<T>(path: string, options: ApiOptions = {}): Promise<T> {
   const headers: Record<string, string> = {}
   const user = auth.currentUser
