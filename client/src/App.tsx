@@ -1,13 +1,23 @@
-import { Link, Route, Routes } from 'react-router'
+import { Link, NavLink, Route, Routes } from 'react-router'
 import { useAuth } from './context/AuthContext'
 import { HomePage } from './features/home/HomePage'
 import { LoginPage } from './features/auth/LoginPage'
 import { RegisterPage } from './features/auth/RegisterPage'
+import { ProductsPage } from './features/catalog/ProductsPage'
+import { ProductDetailPage } from './features/catalog/ProductDetailPage'
 
 function Nav() {
   const { user, profile, logout } = useAuth()
   return (
     <nav className="flex items-center gap-6 text-sm">
+      <NavLink
+        to="/products"
+        className={({ isActive }) =>
+          `transition-colors duration-150 ${isActive ? 'text-accent' : 'text-primary hover:text-accent'}`
+        }
+      >
+        Collection
+      </NavLink>
       {user ? (
         <>
           <span className="text-secondary">{profile?.name ?? user.email}</span>
@@ -47,6 +57,16 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/products" element={<ProductsPage />} />
+          <Route path="/products/:id" element={<ProductDetailPage />} />
+          <Route
+            path="/custom"
+            element={
+              <div className="text-center py-20">
+                <p className="font-display text-2xl text-primary">Custom stitching arrives soon.</p>
+              </div>
+            }
+          />
         </Routes>
       </main>
     </>
