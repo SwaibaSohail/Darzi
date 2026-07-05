@@ -51,12 +51,16 @@ export function CheckoutPage() {
       return
     }
     placeOrder.mutate({
-      items: items.map((i) => ({
-        kind: 'product' as const,
-        productId: i.productId,
-        qty: i.qty,
-        ...(i.size ? { size: i.size } : {}),
-      })),
+      items: items.map((i) =>
+        i.kind === 'product'
+          ? {
+              kind: 'product' as const,
+              productId: i.productId,
+              qty: i.qty,
+              ...(i.size ? { size: i.size } : {}),
+            }
+          : i.request,
+      ),
       address: {
         line1: line1.trim(),
         city: city.trim(),

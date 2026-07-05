@@ -11,7 +11,9 @@ export const ORDER_STATUSES = [
 
 export type OrderStatus = (typeof ORDER_STATUSES)[number] | 'cancelled'
 
-export interface OrderItem {
+import type { CustomRequestLine } from '../custom/api'
+
+export interface ProductOrderItem {
   kind: 'product'
   productId: string
   name: string
@@ -20,6 +22,21 @@ export interface OrderItem {
   size: string | null
   image: string | null
 }
+
+export interface CustomOrderItem {
+  kind: 'custom'
+  serviceId: string
+  serviceName: string
+  basePrice: number
+  optionSelections: { key: string; label: string; value: string; choiceLabel: string; priceDelta: number }[]
+  fabric: { source: 'shop'; productId: string; name: string; price: number } | { source: 'own' }
+  measurements: { unit: 'cm' | 'in'; values: Record<string, number> }
+  styleNotes: string
+  referenceImage: { url: string; path: string } | null
+  lineTotal: number
+}
+
+export type OrderItem = ProductOrderItem | CustomOrderItem
 
 export interface Order {
   id: string
@@ -34,7 +51,7 @@ export interface Order {
 }
 
 export interface CreateOrderRequest {
-  items: { kind: 'product'; productId: string; qty: number; size?: string }[]
+  items: ({ kind: 'product'; productId: string; qty: number; size?: string } | CustomRequestLine)[]
   address: { line1: string; city: string; postal: string; phone: string }
   paymentMethod: 'cod'
 }

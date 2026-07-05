@@ -12,6 +12,7 @@ import { CartPage } from './features/cart/CartPage'
 import { CheckoutPage } from './features/checkout/CheckoutPage'
 import { MyOrdersPage } from './features/orders/MyOrdersPage'
 import { OrderDetailPage } from './features/orders/OrderDetailPage'
+import { CustomOrderWizard } from './features/custom/CustomOrderWizard'
 import { AdminLayout } from './features/admin/AdminLayout'
 import { ProductsAdminPage } from './features/admin/ProductsAdminPage'
 import { ProductFormPage } from './features/admin/ProductFormPage'
@@ -30,6 +31,14 @@ function Nav() {
         }
       >
         Collection
+      </NavLink>
+      <NavLink
+        to="/custom"
+        className={({ isActive }) =>
+          `transition-colors duration-150 ${isActive ? 'text-accent' : 'text-primary hover:text-accent'}`
+        }
+      >
+        Custom
       </NavLink>
       <NavLink
         to="/cart"
@@ -115,14 +124,7 @@ function App() {
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/products" element={<ProductsPage />} />
           <Route path="/products/:id" element={<ProductDetailPage />} />
-          <Route
-            path="/custom"
-            element={
-              <div className="text-center py-20">
-                <p className="font-display text-2xl text-primary">Custom stitching arrives soon.</p>
-              </div>
-            }
-          />
+          <Route path="/custom" element={<CustomOrderWizard />} />
           <Route path="/cart" element={<CartPage />} />
           <Route
             path="/checkout"

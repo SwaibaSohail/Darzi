@@ -8,7 +8,7 @@ const FREE_DELIVERY_THRESHOLD = 500_000
 const DELIVERY_FEE = 20_000
 
 export function CartPage() {
-  const { items, subtotal, removeItem, setQty } = useCart()
+  const { items, subtotal, removeProduct, removeCustom, setQty } = useCart()
   const { user } = useAuth()
   const navigate = useNavigate()
 
@@ -31,67 +31,106 @@ export function CartPage() {
 
       <div className="grid lg:grid-cols-[1fr_320px] gap-10">
         <ul className="divide-y divide-border">
-          {items.map((item) => (
-            <li key={`${item.productId}-${item.size}`} className="py-5 flex gap-4">
-              {item.image ? (
-                <img
-                  src={item.image}
-                  alt=""
-                  width={64}
-                  height={80}
-                  className="w-16 h-20 object-cover rounded"
-                />
-              ) : (
-                <div className="w-16 h-20 bg-muted rounded" aria-hidden="true" />
-              )}
-              <div className="flex-1">
-                <div className="flex justify-between gap-4">
-                  <div>
-                    <Link
-                      to={`/products/${item.productId}`}
-                      className="font-medium text-primary hover:text-accent"
-                    >
-                      {item.name}
-                    </Link>
-                    {item.size && <p className="text-sm text-secondary">Size {item.size}</p>}
+          {items.map((item) =>
+            item.kind === 'product' ? (
+              <li key={`p-${item.productId}-${item.size}`} className="py-5 flex gap-4">
+                {item.image ? (
+                  <img
+                    src={item.image}
+                    alt=""
+                    width={64}
+                    height={80}
+                    className="w-16 h-20 object-cover rounded"
+                  />
+                ) : (
+                  <div className="w-16 h-20 bg-muted rounded" aria-hidden="true" />
+                )}
+                <div className="flex-1">
+                  <div className="flex justify-between gap-4">
+                    <div>
+                      <Link
+                        to={`/products/${item.productId}`}
+                        className="font-medium text-primary hover:text-accent"
+                      >
+                        {item.name}
+                      </Link>
+                      {item.size && <p className="text-sm text-secondary">Size {item.size}</p>}
+                    </div>
+                    <p className="font-semibold text-primary tabular-nums">
+                      {formatPKR(item.unitPrice * item.qty)}
+                    </p>
                   </div>
-                  <p className="font-semibold text-primary tabular-nums">
-                    {formatPKR(item.unitPrice * item.qty)}
-                  </p>
+                  <div className="flex items-center gap-4 mt-3">
+                    <div className="flex items-center border border-border rounded">
+                      <button
+                        type="button"
+                        aria-label={`Decrease quantity of ${item.name}`}
+                        onClick={() => setQty(item.productId, item.size, item.qty - 1)}
+                        className="px-3 py-1 text-secondary hover:text-primary cursor-pointer"
+                      >
+                        −
+                      </button>
+                      <span className="px-3 tabular-nums text-sm" aria-live="polite">
+                        {item.qty}
+                      </span>
+                      <button
+                        type="button"
+                        aria-label={`Increase quantity of ${item.name}`}
+                        onClick={() => setQty(item.productId, item.size, item.qty + 1)}
+                        className="px-3 py-1 text-secondary hover:text-primary cursor-pointer"
+                      >
+                        +
+                      </button>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => removeProduct(item.productId, item.size)}
+                      className="text-sm text-secondary hover:text-destructive cursor-pointer"
+                    >
+                      Remove
+                    </button>
+                  </div>
                 </div>
-                <div className="flex items-center gap-4 mt-3">
-                  <div className="flex items-center border border-border rounded">
-                    <button
-                      type="button"
-                      aria-label={`Decrease quantity of ${item.name}`}
-                      onClick={() => setQty(item.productId, item.size, item.qty - 1)}
-                      className="px-3 py-1 text-secondary hover:text-primary cursor-pointer"
-                    >
-                      −
-                    </button>
-                    <span className="px-3 tabular-nums text-sm" aria-live="polite">
-                      {item.qty}
-                    </span>
-                    <button
-                      type="button"
-                      aria-label={`Increase quantity of ${item.name}`}
-                      onClick={() => setQty(item.productId, item.size, item.qty + 1)}
-                      className="px-3 py-1 text-secondary hover:text-primary cursor-pointer"
-                    >
-                      +
-                    </button>
+              </li>
+            ) : (
+              <li key={`c-${item.lineId}`} className="py-5 flex gap-4">
+                {item.image ? (
+                  <img
+                    src={item.image}
+                    alt=""
+                    width={64}
+                    height={80}
+                    className="w-16 h-20 object-cover rounded"
+                  />
+                ) : (
+                  <div className="w-16 h-20 bg-muted rounded flex items-center justify-center text-secondary text-xs" aria-hidden="true">
+                    ✂
+                  </div>
+                )}
+                <div className="flex-1">
+                  <div className="flex justify-between gap-4">
+                    <div>
+                      <p className="font-medium text-primary">{item.serviceName}</p>
+                      <p className="text-xs uppercase tracking-wide text-accent mb-1">
+                        Custom stitching
+                      </p>
+                      <p className="text-sm text-secondary">{item.summary}</p>
+                    </div>
+                    <p className="font-semibold text-primary tabular-nums">
+                      {formatPKR(item.estimate)}
+                    </p>
                   </div>
                   <button
                     type="button"
-                    onClick={() => removeItem(item.productId, item.size)}
-                    className="text-sm text-secondary hover:text-destructive cursor-pointer"
+                    onClick={() => removeCustom(item.lineId)}
+                    className="text-sm text-secondary hover:text-destructive cursor-pointer mt-3"
                   >
                     Remove
                   </button>
                 </div>
-              </div>
-            </li>
-          ))}
+              </li>
+            ),
+          )}
         </ul>
 
         <aside className="border border-border rounded-lg p-6 bg-surface h-fit">
