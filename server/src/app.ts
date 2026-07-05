@@ -14,6 +14,7 @@ import { adminUploadsRouter, userUploadsRouter } from './modules/uploads/routes.
 import measurementsRouter from './modules/measurements/routes.js'
 import { ordersRouter, myOrdersRouter } from './modules/orders/routes.js'
 import adminOrdersRouter from './modules/orders/adminRoutes.js'
+import adminStatsRouter from './modules/admin/routes.js'
 
 const app = express()
 
@@ -33,6 +34,7 @@ app.use('/api/me', usersRouter)
 app.use('/api/orders', ordersRouter)
 app.use('/api/products', productsRouter)
 app.use('/api/services', servicesRouter)
+app.use('/api/admin', adminStatsRouter)
 app.use('/api/admin/orders', adminOrdersRouter)
 app.use('/api/admin/products', adminProductsRouter)
 app.use('/api/admin/services', adminServicesRouter)

@@ -34,6 +34,38 @@ const adminOrdersApi = {
       method: 'PATCH',
       body: { status },
     }),
+  stats: () =>
+    apiFetch<{
+      stats: {
+        totalOrders: number
+        active: number
+        byStatus: Record<OrderStatus, number>
+        deliveredRevenue: number
+        unreadChats: number
+      }
+    }>('/api/admin/stats'),
+}
+
+function StatsRow() {
+  const { data } = useQuery({ queryKey: ['admin', 'stats'], queryFn: adminOrdersApi.stats })
+  if (!data) return null
+  const { stats } = data
+  const cards = [
+    { label: 'Active orders', value: String(stats.active) },
+    { label: 'Delivered', value: String(stats.byStatus.delivered) },
+    { label: 'Revenue (delivered)', value: formatPKR(stats.deliveredRevenue) },
+    { label: 'Chats needing reply', value: String(stats.unreadChats) },
+  ]
+  return (
+    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      {cards.map((c) => (
+        <div key={c.label} className="border border-border rounded-lg bg-surface p-4">
+          <p className="text-xs uppercase tracking-wide text-secondary mb-1">{c.label}</p>
+          <p className="text-xl font-semibold text-primary tabular-nums">{c.value}</p>
+        </div>
+      ))}
+    </div>
+  )
 }
 
 export function OrdersAdminPage() {
@@ -48,7 +80,10 @@ export function OrdersAdminPage() {
 
   useEffect(() => {
     if (!socket) return
-    const refresh = () => queryClient.invalidateQueries({ queryKey: ['admin', 'orders'] })
+    const refresh = () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'orders'] })
+      queryClient.invalidateQueries({ queryKey: ['admin', 'stats'] })
+    }
     socket.on('order:status', refresh)
     socket.on('chat:unread', refresh)
     return () => {
@@ -67,6 +102,7 @@ export function OrdersAdminPage() {
 
   return (
     <div>
+      <StatsRow />
       <div className="flex flex-wrap gap-2 mb-6" role="tablist" aria-label="Filter orders by status">
         {FILTERS.map((f) => (
           <button
