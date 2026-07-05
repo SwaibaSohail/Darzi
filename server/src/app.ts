@@ -12,6 +12,7 @@ import servicesRouter from './modules/services/routes.js'
 import { adminProductsRouter, adminServicesRouter } from './modules/products/adminRoutes.js'
 import uploadsRouter from './modules/uploads/routes.js'
 import measurementsRouter from './modules/measurements/routes.js'
+import { ordersRouter, myOrdersRouter } from './modules/orders/routes.js'
 
 const app = express()
 
@@ -26,7 +27,9 @@ app.get('/health', (_req, res) => {
 })
 
 app.use('/api/me/measurements', measurementsRouter)
+app.use('/api/me/orders', myOrdersRouter)
 app.use('/api/me', usersRouter)
+app.use('/api/orders', ordersRouter)
 app.use('/api/products', productsRouter)
 app.use('/api/services', servicesRouter)
 app.use('/api/admin/products', adminProductsRouter)
