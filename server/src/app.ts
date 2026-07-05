@@ -18,6 +18,10 @@ import adminStatsRouter from './modules/admin/routes.js'
 
 const app = express()
 
+// Render terminates TLS at its proxy; without this the rate limiter would
+// key every request to the proxy's IP instead of the client's.
+app.set('trust proxy', 1)
+
 app.use(helmet())
 app.use(cors({ origin: allowedOrigins }))
 app.use(express.json({ limit: '100kb' }))

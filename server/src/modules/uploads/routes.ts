@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import multer from 'multer'
-import rateLimit from 'express-rate-limit'
+import rateLimit, { ipKeyGenerator } from 'express-rate-limit'
 import { requireAuth, requireAdmin } from '../../middleware/auth.js'
 import { uploadImage } from './service.js'
 
@@ -32,7 +32,8 @@ const referenceLimit = rateLimit({
   limit: 10,
   standardHeaders: 'draft-7',
   legacyHeaders: false,
-  keyGenerator: (req) => req.user?.uid ?? req.ip ?? 'anonymous',
+  // uid when authenticated; IPv6-safe ip bucketing otherwise
+  keyGenerator: (req) => req.user?.uid ?? (req.ip ? ipKeyGenerator(req.ip) : 'anonymous'),
 })
 
 /** Authenticated customer uploads, namespaced per user. */
