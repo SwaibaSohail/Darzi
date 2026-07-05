@@ -164,6 +164,9 @@ export async function cancelOrder(userId: string, orderId: string): Promise<Orde
       throw new AppError(400, 'INVALID_STATE', 'This order can no longer be cancelled')
     }
 
+    // Firestore transactions demand every read before any write — gather all
+    // restock reads first, then apply the updates.
+    const restocks: { ref: FirebaseFirestore.DocumentReference; newStock: number }[] = []
     for (const item of order.items) {
       let productId: string | null = null
       let restockQty = 0
@@ -178,9 +181,14 @@ export async function cancelOrder(userId: string, orderId: string): Promise<Orde
       const productRef = db.collection('products').doc(productId)
       const productSnap = await tx.get(productRef)
       if (productSnap.exists) {
-        const current = (productSnap.data() as Product).stock
-        tx.update(productRef, { stock: current + restockQty })
+        restocks.push({
+          ref: productRef,
+          newStock: (productSnap.data() as Product).stock + restockQty,
+        })
       }
+    }
+    for (const r of restocks) {
+      tx.update(r.ref, { stock: r.newStock })
     }
 
     const timeline = [...order.timeline, { status: 'cancelled' as const, at: new Date(), by: 'customer' as const }]

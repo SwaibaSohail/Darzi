@@ -23,17 +23,20 @@ export function SocketProvider({ children }: { children: ReactNode }) {
       return
     }
 
-    let cancelled = false
-    ;(async () => {
-      const token = await user.getIdToken()
-      if (cancelled) return
-      const next = io(SOCKET_URL, { auth: { token } })
-      socketRef.current = next
-      setSocket(next)
-    })()
+    // auth as a callback: every (re)connection attempt fetches a fresh ID
+    // token, so reconnects after the 1-hour token expiry still authenticate.
+    const next = io(SOCKET_URL, {
+      auth: (cb) => {
+        user
+          .getIdToken()
+          .then((token) => cb({ token }))
+          .catch(() => cb({}))
+      },
+    })
+    socketRef.current = next
+    setSocket(next)
 
     return () => {
-      cancelled = true
       socketRef.current?.disconnect()
       socketRef.current = null
       setSocket(null)
