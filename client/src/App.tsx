@@ -176,6 +176,18 @@ function App() {
             <Route path="services/new" element={<ServiceFormPage />} />
             <Route path="services/:id/edit" element={<ServiceFormPage />} />
           </Route>
+          <Route
+            path="*"
+            element={
+              <div className="text-center py-24">
+                <p className="font-display text-5xl text-primary mb-3">404</p>
+                <p className="text-secondary mb-6">This page does not exist.</p>
+                <Link to="/" className="text-accent hover:underline">
+                  Back home
+                </Link>
+              </div>
+            }
+          />
         </Routes>
       </main>
     </>
