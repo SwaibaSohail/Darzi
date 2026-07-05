@@ -46,3 +46,19 @@ export const measurementProfileSchema = z
   })
 
 export const MAX_PROFILES_PER_USER = 10
+
+/** Reusable range check for inline measurements (order flow). Returns an error message or null. */
+export function validateMeasurementValues(
+  unit: 'cm' | 'in',
+  values: Record<string, number>,
+): string | null {
+  if (Object.keys(values).length === 0) return 'At least one measurement is required'
+  const { min, max } = RANGES[unit]
+  for (const [key, value] of Object.entries(values)) {
+    if (!(MEASUREMENT_KEYS as readonly string[]).includes(key)) return `Unknown measurement "${key}"`
+    if (typeof value !== 'number' || value < min || value > max) {
+      return `"${key}" must be between ${min} and ${max} ${unit}`
+    }
+  }
+  return null
+}

@@ -20,7 +20,22 @@ export interface ReadyMadeItem {
   image: string | null
 }
 
-export type OrderItem = ReadyMadeItem
+export interface CustomItem {
+  kind: 'custom'
+  serviceId: string
+  serviceName: string
+  basePrice: number
+  optionSelections: { key: string; label: string; value: string; choiceLabel: string; priceDelta: number }[]
+  fabric:
+    | { source: 'shop'; productId: string; name: string; price: number }
+    | { source: 'own' }
+  measurements: { unit: 'cm' | 'in'; values: Record<string, number> } // snapshot, never a reference
+  styleNotes: string
+  referenceImage: { url: string; path: string } | null
+  lineTotal: number
+}
+
+export type OrderItem = ReadyMadeItem | CustomItem
 
 export interface OrderAmounts {
   subtotal: number

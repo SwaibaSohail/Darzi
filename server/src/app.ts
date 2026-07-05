@@ -10,7 +10,7 @@ import usersRouter from './modules/users/routes.js'
 import productsRouter from './modules/products/routes.js'
 import servicesRouter from './modules/services/routes.js'
 import { adminProductsRouter, adminServicesRouter } from './modules/products/adminRoutes.js'
-import uploadsRouter from './modules/uploads/routes.js'
+import { adminUploadsRouter, userUploadsRouter } from './modules/uploads/routes.js'
 import measurementsRouter from './modules/measurements/routes.js'
 import { ordersRouter, myOrdersRouter } from './modules/orders/routes.js'
 
@@ -34,7 +34,8 @@ app.use('/api/products', productsRouter)
 app.use('/api/services', servicesRouter)
 app.use('/api/admin/products', adminProductsRouter)
 app.use('/api/admin/services', adminServicesRouter)
-app.use('/api/admin/uploads', uploadsRouter)
+app.use('/api/admin/uploads', adminUploadsRouter)
+app.use('/api/uploads', userUploadsRouter)
 
 app.use(notFoundHandler)
 app.use(errorHandler)
