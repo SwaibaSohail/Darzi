@@ -74,6 +74,17 @@ export const STATUS_LABELS: Record<OrderStatus, string> = {
   cancelled: 'Cancelled',
 }
 
+/** Mirror of the server state machine — for rendering admin buttons only. */
+export const NEXT_STATUSES: Record<OrderStatus, OrderStatus[]> = {
+  placed: ['confirmed', 'cancelled'],
+  confirmed: ['cutting', 'cancelled'],
+  cutting: ['stitching'],
+  stitching: ['ready'],
+  ready: ['delivered'],
+  delivered: [],
+  cancelled: [],
+}
+
 export const STATUS_BADGE_CLASSES: Record<OrderStatus, string> = {
   placed: 'bg-slate-100 text-slate-700',
   confirmed: 'bg-sky-100 text-sky-800',

@@ -1,5 +1,7 @@
+import { useEffect } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Link, useParams } from 'react-router'
+import { useSocket } from '../../context/SocketContext'
 import { ordersApi } from './api'
 import { OrderStepper } from './OrderStepper'
 import { formatPKR } from '../../lib/money'
@@ -9,6 +11,22 @@ import { Button } from '../../components/Button'
 export function OrderDetailPage() {
   const { id } = useParams<{ id: string }>()
   const queryClient = useQueryClient()
+  const socket = useSocket()
+
+  // Live status: the stepper advances the moment the tailor updates the order.
+  useEffect(() => {
+    if (!socket || !id) return
+    const onStatus = (payload: { orderId: string }) => {
+      if (payload.orderId === id) {
+        queryClient.invalidateQueries({ queryKey: ['order', id] })
+        queryClient.invalidateQueries({ queryKey: ['my-orders'] })
+      }
+    }
+    socket.on('order:status', onStatus)
+    return () => {
+      socket.off('order:status', onStatus)
+    }
+  }, [socket, id, queryClient])
 
   const { data, isPending, isError } = useQuery({
     queryKey: ['order', id],

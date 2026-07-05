@@ -18,6 +18,7 @@ import { ProductsAdminPage } from './features/admin/ProductsAdminPage'
 import { ProductFormPage } from './features/admin/ProductFormPage'
 import { ServicesAdminPage } from './features/admin/ServicesAdminPage'
 import { ServiceFormPage } from './features/admin/ServiceFormPage'
+import { OrdersAdminPage } from './features/admin/OrdersAdminPage'
 
 function Nav() {
   const { user, profile, isAdmin, logout } = useAuth()
@@ -166,7 +167,8 @@ function App() {
               </RequireAdmin>
             }
           >
-            <Route index element={<ProductsAdminPage />} />
+            <Route index element={<OrdersAdminPage />} />
+            <Route path="orders" element={<OrdersAdminPage />} />
             <Route path="products" element={<ProductsAdminPage />} />
             <Route path="products/new" element={<ProductFormPage />} />
             <Route path="products/:id/edit" element={<ProductFormPage />} />
