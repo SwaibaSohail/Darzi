@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Link, useParams } from 'react-router'
 import { useSocket } from '../../context/SocketContext'
+import { ChatPanel } from '../chat/ChatPanel'
 import { ordersApi } from './api'
 import { OrderStepper } from './OrderStepper'
 import { formatPKR } from '../../lib/money'
@@ -143,6 +144,9 @@ export function OrderDetailPage() {
         </section>
 
         <aside>
+          <div className="mb-5">
+            <ChatPanel orderId={order.id} />
+          </div>
           <div className="border border-border rounded-lg p-5 bg-surface mb-5">
             <h3 className="font-medium text-primary mb-3">Amounts</h3>
             <dl className="space-y-1.5 text-sm">

@@ -1,11 +1,26 @@
-import { useQuery } from '@tanstack/react-query'
+import { useEffect } from 'react'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { Link } from 'react-router'
+import { useSocket } from '../../context/SocketContext'
 import { ordersApi, STATUS_LABELS, STATUS_BADGE_CLASSES } from './api'
 import { formatPKR } from '../../lib/money'
 import { Skeleton } from '../../components/Skeleton'
 
 export function MyOrdersPage() {
   const { data, isPending } = useQuery({ queryKey: ['my-orders'], queryFn: ordersApi.listMine })
+  const socket = useSocket()
+  const queryClient = useQueryClient()
+
+  useEffect(() => {
+    if (!socket) return
+    const refresh = () => queryClient.invalidateQueries({ queryKey: ['my-orders'] })
+    socket.on('chat:unread', refresh)
+    socket.on('order:status', refresh)
+    return () => {
+      socket.off('chat:unread', refresh)
+      socket.off('order:status', refresh)
+    }
+  }, [socket, queryClient])
 
   return (
     <div>
@@ -37,6 +52,14 @@ export function MyOrdersPage() {
                   </p>
                 </div>
                 <div className="flex items-center gap-6">
+                  {(order.unread?.customer ?? 0) > 0 && (
+                    <span
+                      className="px-2 py-0.5 bg-accent text-white rounded-full text-xs font-medium"
+                      aria-label={`${order.unread!.customer} unread messages`}
+                    >
+                      {order.unread!.customer} new
+                    </span>
+                  )}
                   <span
                     className={`px-2.5 py-0.5 rounded-full text-xs font-medium ${STATUS_BADGE_CLASSES[order.status]}`}
                   >

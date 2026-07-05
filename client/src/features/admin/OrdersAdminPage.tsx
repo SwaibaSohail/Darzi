@@ -11,6 +11,7 @@ import {
 } from '../orders/api'
 import { formatPKR } from '../../lib/money'
 import { Skeleton } from '../../components/Skeleton'
+import { ChatPanel } from '../chat/ChatPanel'
 
 const FILTERS: (OrderStatus | 'all')[] = [
   'all',
@@ -49,10 +50,14 @@ export function OrdersAdminPage() {
     if (!socket) return
     const refresh = () => queryClient.invalidateQueries({ queryKey: ['admin', 'orders'] })
     socket.on('order:status', refresh)
+    socket.on('chat:unread', refresh)
     return () => {
       socket.off('order:status', refresh)
+      socket.off('chat:unread', refresh)
     }
   }, [socket, queryClient])
+
+  const [openChat, setOpenChat] = useState<string | null>(null)
 
   const transition = useMutation({
     mutationFn: ({ id, status }: { id: string; status: OrderStatus }) =>
@@ -98,6 +103,14 @@ export function OrdersAdminPage() {
                   >
                     {STATUS_LABELS[order.status]}
                   </span>
+                  {(order.unread?.admin ?? 0) > 0 && (
+                    <span
+                      className="px-2 py-0.5 bg-accent text-white rounded-full text-xs font-medium"
+                      aria-label={`${order.unread!.admin} unread messages`}
+                    >
+                      {order.unread!.admin} new
+                    </span>
+                  )}
                 </div>
                 <p className="font-semibold text-primary tabular-nums">
                   {formatPKR(order.amounts.total)}
@@ -156,6 +169,22 @@ export function OrdersAdminPage() {
               <p className="text-xs text-secondary mb-4">
                 {order.address.line1}, {order.address.city} · {order.address.phone}
               </p>
+
+              <div className="flex flex-wrap gap-2 mb-1">
+                <button
+                  type="button"
+                  onClick={() => setOpenChat(openChat === order.id ? null : order.id)}
+                  className="px-4 py-1.5 rounded text-sm border border-border text-secondary hover:border-accent hover:text-accent transition-colors duration-150 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                >
+                  {openChat === order.id ? 'Close chat' : 'Chat'}
+                </button>
+              </div>
+
+              {openChat === order.id && (
+                <div className="my-4">
+                  <ChatPanel orderId={order.id} compact />
+                </div>
+              )}
 
               {NEXT_STATUSES[order.status].length > 0 && (
                 <div className="flex flex-wrap gap-2">

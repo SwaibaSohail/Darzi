@@ -47,6 +47,7 @@ export interface Order {
   timeline: { status: OrderStatus; at: { _seconds?: number } | string; by: string }[]
   address: { line1: string; city: string; postal: string; phone: string }
   paymentMethod: 'cod'
+  unread?: { customer: number; admin: number }
   createdAt?: { _seconds?: number }
 }
 
