@@ -5,10 +5,14 @@ import { fetchProduct } from './api'
 import { formatPKR } from '../../lib/money'
 import { Skeleton } from '../../components/Skeleton'
 import { Button } from '../../components/Button'
+import { useCart } from '../../context/CartContext'
 
 export function ProductDetailPage() {
   const { id } = useParams<{ id: string }>()
   const [size, setSize] = useState<string | null>(null)
+  const [sizeError, setSizeError] = useState('')
+  const [added, setAdded] = useState(false)
+  const { addItem } = useCart()
 
   const { data, isPending, isError } = useQuery({
     queryKey: ['product', id],
@@ -70,12 +74,20 @@ export function ProductDetailPage() {
         {needsSize && (
           <fieldset className="mb-8">
             <legend className="text-sm font-medium text-primary mb-2">Size</legend>
+            {sizeError && (
+              <p className="text-sm text-destructive mb-2" role="alert">
+                {sizeError}
+              </p>
+            )}
             <div className="flex gap-2">
               {product.sizes.map((s) => (
                 <button
                   key={s}
                   type="button"
-                  onClick={() => setSize(s)}
+                  onClick={() => {
+                    setSize(s)
+                    setSizeError('')
+                  }}
                   aria-pressed={size === s}
                   className={`w-12 h-12 rounded border text-sm transition-colors duration-150 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
                     size === s
@@ -93,9 +105,36 @@ export function ProductDetailPage() {
         {product.stock === 0 ? (
           <p className="text-destructive font-medium mb-4">Out of stock</p>
         ) : (
-          <Button type="button" disabled title="Cart arrives in the next update">
-            Add to cart — coming soon
-          </Button>
+          <div className="flex items-center gap-4">
+            <Button
+              type="button"
+              onClick={() => {
+                if (needsSize && !size) {
+                  setSizeError('Pick a size first.')
+                  return
+                }
+                addItem({
+                  productId: product.id,
+                  name: product.name,
+                  unitPrice: product.price,
+                  size: needsSize ? size : null,
+                  image: product.images[0]?.url ?? null,
+                })
+                setAdded(true)
+                setTimeout(() => setAdded(false), 2500)
+              }}
+            >
+              Add to cart
+            </Button>
+            {added && (
+              <span className="text-sm text-green-700" role="status">
+                Added ✓{' '}
+                <Link to="/cart" className="text-accent hover:underline">
+                  View cart
+                </Link>
+              </span>
+            )}
+          </div>
         )}
 
         <p className="mt-6 text-sm text-secondary">

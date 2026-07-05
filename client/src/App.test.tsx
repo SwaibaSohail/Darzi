@@ -2,6 +2,7 @@ import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { MemoryRouter } from 'react-router'
 import { AuthProvider } from './context/AuthContext'
+import { CartProvider } from './context/CartContext'
 import App from './App'
 
 vi.mock('./lib/firebase', () => ({
@@ -25,7 +26,9 @@ function renderApp(path = '/') {
   return render(
     <MemoryRouter initialEntries={[path]}>
       <AuthProvider>
-        <App />
+        <CartProvider>
+          <App />
+        </CartProvider>
       </AuthProvider>
     </MemoryRouter>,
   )

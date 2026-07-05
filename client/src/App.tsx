@@ -7,6 +7,11 @@ import { ProductsPage } from './features/catalog/ProductsPage'
 import { ProductDetailPage } from './features/catalog/ProductDetailPage'
 import { RequireAuth, RequireAdmin } from './features/auth/guards'
 import { ProfilePage } from './features/profile/ProfilePage'
+import { useCart } from './context/CartContext'
+import { CartPage } from './features/cart/CartPage'
+import { CheckoutPage } from './features/checkout/CheckoutPage'
+import { MyOrdersPage } from './features/orders/MyOrdersPage'
+import { OrderDetailPage } from './features/orders/OrderDetailPage'
 import { AdminLayout } from './features/admin/AdminLayout'
 import { ProductsAdminPage } from './features/admin/ProductsAdminPage'
 import { ProductFormPage } from './features/admin/ProductFormPage'
@@ -15,6 +20,7 @@ import { ServiceFormPage } from './features/admin/ServiceFormPage'
 
 function Nav() {
   const { user, profile, isAdmin, logout } = useAuth()
+  const { count } = useCart()
   return (
     <nav className="flex items-center gap-6 text-sm">
       <NavLink
@@ -25,6 +31,32 @@ function Nav() {
       >
         Collection
       </NavLink>
+      <NavLink
+        to="/cart"
+        className={({ isActive }) =>
+          `relative transition-colors duration-150 ${isActive ? 'text-accent' : 'text-primary hover:text-accent'}`
+        }
+      >
+        Cart
+        {count > 0 && (
+          <span
+            aria-label={`${count} items in cart`}
+            className="absolute -top-2 -right-3 min-w-4 h-4 px-1 bg-accent text-white text-[10px] leading-4 text-center rounded-full"
+          >
+            {count}
+          </span>
+        )}
+      </NavLink>
+      {user && (
+        <NavLink
+          to="/orders"
+          className={({ isActive }) =>
+            `transition-colors duration-150 ${isActive ? 'text-accent' : 'text-primary hover:text-accent'}`
+          }
+        >
+          Orders
+        </NavLink>
+      )}
       {isAdmin && (
         <NavLink
           to="/admin/products"
@@ -89,6 +121,31 @@ function App() {
               <div className="text-center py-20">
                 <p className="font-display text-2xl text-primary">Custom stitching arrives soon.</p>
               </div>
+            }
+          />
+          <Route path="/cart" element={<CartPage />} />
+          <Route
+            path="/checkout"
+            element={
+              <RequireAuth>
+                <CheckoutPage />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/orders"
+            element={
+              <RequireAuth>
+                <MyOrdersPage />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/orders/:id"
+            element={
+              <RequireAuth>
+                <OrderDetailPage />
+              </RequireAuth>
             }
           />
           <Route
