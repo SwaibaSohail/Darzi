@@ -1,8 +1,10 @@
 import { Router } from 'express'
 import rateLimit from 'express-rate-limit'
+import { z } from 'zod'
 import { requireAuth } from '../../middleware/auth.js'
 import { createOrderSchema } from './schemas.js'
 import { createOrder, listMyOrders, getOrderFor, cancelOrder } from './service.js'
+import { listMessages, markRead } from '../chat/service.js'
 
 // Order creation is the abuse-sensitive endpoint — tighter than the general limit.
 const createOrderLimit = rateLimit({
@@ -52,6 +54,39 @@ ordersRouter.post('/:id/cancel', async (req, res, next) => {
       return
     }
     res.json({ order })
+  } catch (err) {
+    next(err)
+  }
+})
+
+const messagesQuerySchema = z.object({
+  limit: z.coerce.number().int().min(1).max(100).default(50),
+})
+
+ordersRouter.get('/:id/messages', async (req, res, next) => {
+  try {
+    const order = await getOrderFor(req.user!.uid, req.user!.isAdmin, req.params.id)
+    if (!order) {
+      res.status(404).json({ error: { code: 'NOT_FOUND', message: 'Order not found' } })
+      return
+    }
+    const parsed = messagesQuerySchema.safeParse(req.query)
+    const limit = parsed.success ? parsed.data.limit : 50
+    res.json({ items: await listMessages(order.id, limit) })
+  } catch (err) {
+    next(err)
+  }
+})
+
+ordersRouter.post('/:id/messages/read', async (req, res, next) => {
+  try {
+    const order = await getOrderFor(req.user!.uid, req.user!.isAdmin, req.params.id)
+    if (!order) {
+      res.status(404).json({ error: { code: 'NOT_FOUND', message: 'Order not found' } })
+      return
+    }
+    await markRead(order.id, req.user!.isAdmin ? 'admin' : 'customer')
+    res.json({ ok: true })
   } catch (err) {
     next(err)
   }

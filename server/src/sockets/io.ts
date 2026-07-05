@@ -3,6 +3,7 @@ import { Server } from 'socket.io'
 import { getAuthAdmin } from '../config/firebase.js'
 import { allowedOrigins } from '../config/env.js'
 import logger from '../lib/logger.js'
+import { registerChatHandlers } from './chatHandlers.js'
 
 export interface SocketAuth {
   uid: string
@@ -33,6 +34,7 @@ export function initIo(httpServer: HttpServer): Server {
     const auth = socket.data.auth as SocketAuth
     socket.join(`user:${auth.uid}`)
     if (auth.isAdmin) socket.join('admin')
+    registerChatHandlers(io!, socket)
     logger.debug({ uid: auth.uid, admin: auth.isAdmin }, 'socket connected')
   })
 
