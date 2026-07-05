@@ -20,69 +20,59 @@ import { ServicesAdminPage } from './features/admin/ServicesAdminPage'
 import { ServiceFormPage } from './features/admin/ServiceFormPage'
 import { OrdersAdminPage } from './features/admin/OrdersAdminPage'
 
+const navLinkClass = ({ isActive }: { isActive: boolean }) =>
+  `text-[13px] uppercase tracking-[0.14em] transition-colors duration-150 ${
+    isActive ? 'text-accent' : 'text-primary hover:text-accent'
+  }`
+
 function Nav() {
   const { user, profile, isAdmin, logout } = useAuth()
   const { count } = useCart()
   return (
-    <nav className="flex items-center gap-6 text-sm">
-      <NavLink
-        to="/products"
-        className={({ isActive }) =>
-          `transition-colors duration-150 ${isActive ? 'text-accent' : 'text-primary hover:text-accent'}`
-        }
-      >
+    <nav className="flex flex-wrap items-center gap-x-6 gap-y-2">
+      <NavLink to="/products" className={navLinkClass}>
         Collection
       </NavLink>
-      <NavLink
-        to="/custom"
-        className={({ isActive }) =>
-          `transition-colors duration-150 ${isActive ? 'text-accent' : 'text-primary hover:text-accent'}`
-        }
-      >
+      <NavLink to="/custom" className={navLinkClass}>
         Custom
       </NavLink>
       <NavLink
         to="/cart"
         className={({ isActive }) =>
-          `relative transition-colors duration-150 ${isActive ? 'text-accent' : 'text-primary hover:text-accent'}`
+          `relative text-[13px] uppercase tracking-[0.14em] transition-colors duration-150 ${
+            isActive ? 'text-accent' : 'text-primary hover:text-accent'
+          }`
         }
       >
         Cart
         {count > 0 && (
           <span
             aria-label={`${count} items in cart`}
-            className="absolute -top-2 -right-3 min-w-4 h-4 px-1 bg-accent text-white text-[10px] leading-4 text-center rounded-full"
+            className="absolute -top-2.5 -right-3.5 min-w-4 h-4 px-1 bg-accent text-white text-[10px] leading-4 text-center rounded-full font-medium tracking-normal"
           >
             {count}
           </span>
         )}
       </NavLink>
       {user && (
-        <NavLink
-          to="/orders"
-          className={({ isActive }) =>
-            `transition-colors duration-150 ${isActive ? 'text-accent' : 'text-primary hover:text-accent'}`
-          }
-        >
+        <NavLink to="/orders" className={navLinkClass}>
           Orders
         </NavLink>
       )}
       {isAdmin && (
-        <NavLink
-          to="/admin/products"
-          className={({ isActive }) =>
-            `transition-colors duration-150 ${isActive ? 'text-accent' : 'text-primary hover:text-accent'}`
-          }
-        >
+        <NavLink to="/admin/products" className={navLinkClass}>
           Admin
         </NavLink>
       )}
+      <span className="hidden sm:block w-px h-4 bg-border" aria-hidden="true" />
       {user ? (
         <>
           <NavLink
             to="/profile"
             className={({ isActive }) =>
-              `transition-colors duration-150 ${isActive ? 'text-accent' : 'text-secondary hover:text-accent'}`
+              `text-[13px] tracking-wide transition-colors duration-150 ${
+                isActive ? 'text-accent' : 'text-secondary hover:text-accent'
+              }`
             }
           >
             {profile?.name ?? user.email}
@@ -90,13 +80,16 @@ function Nav() {
           <button
             type="button"
             onClick={logout}
-            className="text-primary hover:text-accent transition-colors duration-150 cursor-pointer"
+            className="text-[13px] uppercase tracking-[0.14em] text-primary hover:text-accent transition-colors duration-150 cursor-pointer"
           >
             Sign out
           </button>
         </>
       ) : (
-        <Link to="/login" className="text-primary hover:text-accent transition-colors duration-150">
+        <Link
+          to="/login"
+          className="text-[13px] uppercase tracking-[0.14em] px-4 py-1.5 border border-primary text-primary rounded-full hover:bg-primary hover:text-white transition-colors duration-200"
+        >
           Sign in
         </Link>
       )}
@@ -104,13 +97,64 @@ function Nav() {
   )
 }
 
+function Footer() {
+  return (
+    <footer className="border-t border-border mt-24">
+      <div className="max-w-6xl mx-auto px-6 sm:px-8 py-12 grid gap-10 sm:grid-cols-3">
+        <div>
+          <p className="font-display text-2xl text-primary mb-2">Darzi</p>
+          <p className="text-sm text-secondary max-w-xs leading-relaxed">
+            Bespoke tailoring, made to your measurements. Every stitch tells your story.
+          </p>
+        </div>
+        <div>
+          <p className="text-xs uppercase tracking-[0.14em] text-primary mb-3">Explore</p>
+          <ul className="space-y-2 text-sm">
+            <li>
+              <Link to="/products" className="text-secondary hover:text-accent transition-colors duration-150">
+                The collection
+              </Link>
+            </li>
+            <li>
+              <Link to="/custom" className="text-secondary hover:text-accent transition-colors duration-150">
+                Custom stitching
+              </Link>
+            </li>
+            <li>
+              <Link to="/profile" className="text-secondary hover:text-accent transition-colors duration-150">
+                Measurement profiles
+              </Link>
+            </li>
+          </ul>
+        </div>
+        <div>
+          <p className="text-xs uppercase tracking-[0.14em] text-primary mb-3">Atelier</p>
+          <p className="text-sm text-secondary leading-relaxed">
+            Cash on delivery across Pakistan.
+            <br />
+            Chat with the tailor on every order.
+          </p>
+        </div>
+      </div>
+      <div className="border-t border-border">
+        <p className="max-w-6xl mx-auto px-6 sm:px-8 py-5 text-xs text-secondary">
+          © {new Date().getFullYear()} Darzi — stitched with care.
+        </p>
+      </div>
+    </footer>
+  )
+}
+
 function App() {
   return (
-    <>
-      <header className="px-8 py-6 border-b border-border">
-        <div className="max-w-4xl mx-auto flex items-center justify-between">
-          <Link to="/" className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent">
-            <h1 className="font-display text-3xl text-primary inline-block border-b-2 border-accent pb-0.5">
+    <div className="min-h-dvh flex flex-col">
+      <header className="sticky top-0 z-40 bg-background/85 backdrop-blur border-b border-border">
+        <div className="max-w-6xl mx-auto px-6 sm:px-8 py-4 flex flex-wrap items-center justify-between gap-y-2">
+          <Link
+            to="/"
+            className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded"
+          >
+            <h1 className="font-display text-3xl leading-none text-primary inline-block border-b-2 border-accent pb-0.5">
               Darzi
             </h1>
           </Link>
@@ -118,7 +162,7 @@ function App() {
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto px-8 py-20">
+      <main className="flex-1 w-full max-w-6xl mx-auto px-6 sm:px-8 py-12 sm:py-16">
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
@@ -180,7 +224,7 @@ function App() {
             path="*"
             element={
               <div className="text-center py-24">
-                <p className="font-display text-5xl text-primary mb-3">404</p>
+                <p className="font-display text-6xl text-primary mb-3">404</p>
                 <p className="text-secondary mb-6">This page does not exist.</p>
                 <Link to="/" className="text-accent hover:underline">
                   Back home
@@ -190,7 +234,9 @@ function App() {
           />
         </Routes>
       </main>
-    </>
+
+      <Footer />
+    </div>
   )
 }
 

@@ -2,19 +2,42 @@
 
 @theme {
   --color-primary: #1C1917;
-  --color-secondary: #44403C;
+  --color-secondary: #57534E;
   --color-accent: #A16207;
+  --color-accent-soft: #FDF6E9;
   --color-background: #FAFAF9;
   --color-surface: #FFFFFF;
-  --color-muted: #E8ECF0;
-  --color-border: #D6D3D1;
+  --color-muted: #F0EEEC;
+  --color-border: #E4E0DC;
   --color-destructive: #DC2626;
   --font-display: "Cormorant", serif;
   --font-body: "Montserrat", sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   font-family: var(--font-body);
   background-color: var(--color-background);
   color: var(--color-secondary);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background-color: var(--color-accent);
+  color: #fff;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }

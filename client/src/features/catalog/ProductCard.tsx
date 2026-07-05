@@ -6,7 +6,7 @@ export function ProductCard({ product }: { product: Product }) {
   return (
     <Link
       to={`/products/${product.id}`}
-      className="group block bg-surface border border-border rounded-lg overflow-hidden transition-shadow duration-200 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+      className="group block bg-surface border border-border rounded-xl overflow-hidden transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 hover:border-accent/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
     >
       <div className="aspect-[4/5] bg-muted overflow-hidden">
         {product.images[0] && (

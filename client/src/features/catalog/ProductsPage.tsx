@@ -29,7 +29,8 @@ export function ProductsPage() {
 
   return (
     <div>
-      <h2 className="font-display text-4xl font-semibold text-primary mb-8">Collection</h2>
+      <p className="text-xs uppercase tracking-[0.22em] text-accent mb-3">The wardrobe</p>
+      <h2 className="font-display text-5xl font-semibold text-primary mb-10">Collection</h2>
 
       <div className="flex flex-wrap items-center gap-4 mb-10">
         <div role="tablist" aria-label="Filter by category" className="flex gap-2">

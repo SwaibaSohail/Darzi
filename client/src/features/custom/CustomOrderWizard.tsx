@@ -65,7 +65,8 @@ export function CustomOrderWizard() {
 
   return (
     <div>
-      <h2 className="font-display text-4xl font-semibold text-primary mb-3">Custom stitching</h2>
+      <p className="text-xs uppercase tracking-[0.22em] text-accent mb-3">Made to measure</p>
+      <h2 className="font-display text-5xl font-semibold text-primary mb-3">Custom stitching</h2>
       <p className="text-secondary mb-10 max-w-xl">
         Pick a service, choose your fabric, share your measurements — the tailor takes it from
         there.

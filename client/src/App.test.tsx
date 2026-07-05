@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { MemoryRouter } from 'react-router'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { AuthProvider } from './context/AuthContext'
 import { CartProvider } from './context/CartContext'
 import App from './App'
@@ -23,13 +24,16 @@ vi.mock('firebase/auth', () => ({
 }))
 
 function renderApp(path = '/') {
+  const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } })
   return render(
     <MemoryRouter initialEntries={[path]}>
-      <AuthProvider>
-        <CartProvider>
-          <App />
-        </CartProvider>
-      </AuthProvider>
+      <QueryClientProvider client={qc}>
+        <AuthProvider>
+          <CartProvider>
+            <App />
+          </CartProvider>
+        </AuthProvider>
+      </QueryClientProvider>
     </MemoryRouter>,
   )
 }
@@ -38,7 +42,7 @@ describe('App', () => {
   it('renders the brand and home hero', () => {
     renderApp('/')
     expect(screen.getByRole('heading', { name: 'Darzi' })).toBeInTheDocument()
-    expect(screen.getByRole('heading', { name: 'Tailored to you.' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: /tailored to you/i })).toBeInTheDocument()
   })
 
   it('shows Sign in link when logged out', () => {
