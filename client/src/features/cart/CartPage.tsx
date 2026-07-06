@@ -133,7 +133,7 @@ export function CartPage() {
           )}
         </ul>
 
-        <aside className="border border-border rounded-2xl p-6 bg-cream h-fit shadow-sm">
+        <aside className="border border-border rounded-lg p-6 bg-surface h-fit">
           <h3 className="font-medium text-primary mb-4">Summary</h3>
           <dl className="space-y-2 text-sm mb-4">
             <div className="flex justify-between">

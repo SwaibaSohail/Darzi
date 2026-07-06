@@ -4,7 +4,6 @@ import { useAuth } from '../../context/AuthContext'
 import { TextField } from '../../components/TextField'
 import { Button } from '../../components/Button'
 import { GoogleButton } from './GoogleButton'
-import { AuthShell } from './AuthShell'
 import { firebaseErrorMessage } from './firebaseErrors'
 
 export function RegisterPage() {
@@ -58,8 +57,8 @@ export function RegisterPage() {
   }
 
   return (
-    <AuthShell>
-      <p className="text-xs uppercase tracking-[0.22em] text-wine mb-3">Join the atelier</p>
+    <div className="max-w-md mx-auto bg-surface border border-border rounded-2xl shadow-sm p-8 sm:p-10 mt-4">
+      <div className="w-8 h-0.5 bg-accent mb-5" aria-hidden="true" />
       <h2 className="font-display text-4xl font-semibold text-primary mb-8">Create account</h2>
       {formError && (
         <p role="alert" className="mb-5 px-4 py-3 bg-destructive/10 text-destructive rounded text-sm">
@@ -110,6 +109,6 @@ export function RegisterPage() {
           Sign in
         </Link>
       </p>
-    </AuthShell>
+    </div>
   )
 }

@@ -77,11 +77,11 @@ export function CustomOrderWizard() {
           <li key={label} className="flex items-center gap-2">
             <span
               aria-current={i === step ? 'step' : undefined}
-              className={`px-3.5 py-1.5 rounded-full text-xs font-medium transition-colors duration-200 ${
+              className={`px-3 py-1 rounded-full text-xs font-medium ${
                 i < step
-                  ? 'bg-gold text-ink'
+                  ? 'bg-accent text-white'
                   : i === step
-                    ? 'bg-ink text-cream shadow-sm'
+                    ? 'bg-primary text-white'
                     : 'bg-muted text-secondary'
               }`}
             >
