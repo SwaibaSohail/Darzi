@@ -51,17 +51,21 @@ function StatsRow() {
   if (!data) return null
   const { stats } = data
   const cards = [
-    { label: 'Active orders', value: String(stats.active) },
-    { label: 'Delivered', value: String(stats.byStatus.delivered) },
-    { label: 'Revenue (delivered)', value: formatPKR(stats.deliveredRevenue) },
-    { label: 'Chats needing reply', value: String(stats.unreadChats) },
+    { label: 'Active orders', value: String(stats.active), rule: 'bg-gold' },
+    { label: 'Delivered', value: String(stats.byStatus.delivered), rule: 'bg-emerald-600' },
+    { label: 'Revenue (delivered)', value: formatPKR(stats.deliveredRevenue), rule: 'bg-ink' },
+    { label: 'Chats needing reply', value: String(stats.unreadChats), rule: 'bg-wine' },
   ]
   return (
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
       {cards.map((c) => (
-        <div key={c.label} className="border border-border rounded-lg bg-surface p-4">
+        <div
+          key={c.label}
+          className="border border-border rounded-xl bg-surface p-4 shadow-sm transition-shadow duration-200 hover:shadow-md"
+        >
+          <div className={`w-8 h-1 rounded-full mb-3 ${c.rule}`} aria-hidden="true" />
           <p className="text-xs uppercase tracking-wide text-secondary mb-1">{c.label}</p>
-          <p className="text-xl font-semibold text-primary tabular-nums">{c.value}</p>
+          <p className="text-2xl font-semibold text-primary tabular-nums">{c.value}</p>
         </div>
       ))}
     </div>

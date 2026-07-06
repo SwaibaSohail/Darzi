@@ -99,45 +99,55 @@ function Nav() {
 
 function Footer() {
   return (
-    <footer className="border-t border-border mt-24">
-      <div className="max-w-6xl mx-auto px-6 sm:px-8 py-12 grid gap-10 sm:grid-cols-3">
+    <footer className="bg-ink text-cream mt-24 relative overflow-hidden">
+      <div
+        className="absolute inset-0 opacity-[0.04]"
+        aria-hidden="true"
+        style={{
+          backgroundImage:
+            'repeating-linear-gradient(45deg, transparent, transparent 12px, #C79A3C 12px, #C79A3C 13px)',
+        }}
+      />
+      <div className="relative max-w-6xl mx-auto px-6 sm:px-8 py-14 grid gap-10 sm:grid-cols-3">
         <div>
-          <p className="font-display text-2xl text-primary mb-2">Darzi</p>
-          <p className="text-sm text-secondary max-w-xs leading-relaxed">
+          <p className="font-display text-3xl border-b-2 border-gold inline-block pb-0.5 mb-4">
+            Darzi
+          </p>
+          <p className="text-sm text-cream/60 max-w-xs leading-relaxed">
             Bespoke tailoring, made to your measurements. Every stitch tells your story.
           </p>
         </div>
         <div>
-          <p className="text-xs uppercase tracking-[0.14em] text-primary mb-3">Explore</p>
+          <p className="text-xs uppercase tracking-[0.14em] text-gold mb-3">Explore</p>
           <ul className="space-y-2 text-sm">
             <li>
-              <Link to="/products" className="text-secondary hover:text-accent transition-colors duration-150">
+              <Link to="/products" className="text-cream/70 hover:text-gold transition-colors duration-150">
                 The collection
               </Link>
             </li>
             <li>
-              <Link to="/custom" className="text-secondary hover:text-accent transition-colors duration-150">
+              <Link to="/custom" className="text-cream/70 hover:text-gold transition-colors duration-150">
                 Custom stitching
               </Link>
             </li>
             <li>
-              <Link to="/profile" className="text-secondary hover:text-accent transition-colors duration-150">
+              <Link to="/profile" className="text-cream/70 hover:text-gold transition-colors duration-150">
                 Measurement profiles
               </Link>
             </li>
           </ul>
         </div>
         <div>
-          <p className="text-xs uppercase tracking-[0.14em] text-primary mb-3">Atelier</p>
-          <p className="text-sm text-secondary leading-relaxed">
+          <p className="text-xs uppercase tracking-[0.14em] text-gold mb-3">Atelier</p>
+          <p className="text-sm text-cream/70 leading-relaxed">
             Cash on delivery across Pakistan.
             <br />
             Chat with the tailor on every order.
           </p>
         </div>
       </div>
-      <div className="border-t border-border">
-        <p className="max-w-6xl mx-auto px-6 sm:px-8 py-5 text-xs text-secondary">
+      <div className="relative border-t border-cream/15">
+        <p className="max-w-6xl mx-auto px-6 sm:px-8 py-5 text-xs text-cream/50">
           © {new Date().getFullYear()} Darzi — stitched with care.
         </p>
       </div>

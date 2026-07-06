@@ -23,9 +23,9 @@ export function OrderStepper({ status }: { status: OrderStatus }) {
                 aria-hidden="true"
                 className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold border-2 transition-colors duration-300 ${
                   done
-                    ? 'bg-accent border-accent text-white'
+                    ? 'bg-gold border-gold text-ink'
                     : current
-                      ? 'border-accent text-accent bg-surface'
+                      ? 'border-wine text-wine bg-wine-soft'
                       : 'border-border text-secondary bg-surface'
                 }`}
               >
@@ -41,7 +41,7 @@ export function OrderStepper({ status }: { status: OrderStatus }) {
             {i < ORDER_STATUSES.length - 1 && (
               <span
                 aria-hidden="true"
-                className={`w-6 sm:w-10 h-0.5 mb-5 ${done ? 'bg-accent' : 'bg-border'}`}
+                className={`w-6 sm:w-10 h-0.5 mb-5 ${done ? 'bg-gold' : 'bg-border'}`}
               />
             )}
           </li>

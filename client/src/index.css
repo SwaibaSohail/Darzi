@@ -2,14 +2,19 @@
 
 @theme {
   --color-primary: #1C1917;
-  --color-secondary: #57534E;
+  --color-secondary: #5C5347;
   --color-accent: #A16207;
-  --color-accent-soft: #FDF6E9;
-  --color-background: #FAFAF9;
-  --color-surface: #FFFFFF;
-  --color-muted: #F0EEEC;
-  --color-border: #E4E0DC;
-  --color-destructive: #DC2626;
+  --color-accent-soft: #F6ECD6;
+  --color-gold: #C79A3C;
+  --color-wine: #7A1230;
+  --color-wine-soft: #F6E6EB;
+  --color-ink: #1A1613;
+  --color-cream: #F7F1E5;
+  --color-background: #F3ECDD;
+  --color-surface: #FCFAF3;
+  --color-muted: #EAE0CE;
+  --color-border: #E0D6C2;
+  --color-destructive: #B91C1C;
   --font-display: "Cormorant", serif;
   --font-body: "Montserrat", sans-serif;
 }
@@ -26,7 +31,7 @@ body {
 }
 
 ::selection {
-  background-color: var(--color-accent);
+  background-color: var(--color-wine);
   color: #fff;
 }
 
