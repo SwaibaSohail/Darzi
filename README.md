@@ -77,8 +77,6 @@ Grant the shop-owner role (deliberately script-only — there is no endpoint for
 cd server && npx tsx src/scripts/grantAdmin.ts owner@example.com
 ```
 
-> Firebase client config values (`VITE_FIREBASE_*`) are public by design — security lives in the deny-all rules and server-side token verification, not in hiding the keys.
-
 ## Stack
 
 React 19 · TypeScript (strict) · Vite · Tailwind CSS v4 · TanStack Query · React Router 7 · Express 5 · Socket.io 4 · Firebase Auth · Firestore · Cloudinary · Zod · Pino · Vitest · Supertest · Testing Library
