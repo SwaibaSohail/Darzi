@@ -13,12 +13,22 @@ function getApp(): App {
   }
   if (!env.FIREBASE_SERVICE_ACCOUNT_B64) {
     throw new Error(
-      'FIREBASE_SERVICE_ACCOUNT_B64 is not set. Add it to server/.env (base64 of the service account JSON).',
+      'FIREBASE_SERVICE_ACCOUNT_B64 is not set. Add it to server/.env (service account JSON, raw or base64).',
     )
   }
-  const serviceAccount = JSON.parse(
-    Buffer.from(env.FIREBASE_SERVICE_ACCOUNT_B64, 'base64').toString('utf8'),
-  )
+  // Accepts the raw service account JSON or its base64 encoding — raw JSON is
+  // far less likely to get mangled when pasted into hosting dashboards.
+  const raw = env.FIREBASE_SERVICE_ACCOUNT_B64.trim()
+  let serviceAccount: object
+  try {
+    serviceAccount = raw.startsWith('{')
+      ? JSON.parse(raw)
+      : JSON.parse(Buffer.from(raw, 'base64').toString('utf8'))
+  } catch {
+    throw new Error(
+      'FIREBASE_SERVICE_ACCOUNT_B64 could not be parsed — re-paste the service account JSON (raw or base64).',
+    )
+  }
   app = initializeApp({
     credential: cert(serviceAccount),
     storageBucket: env.FIREBASE_STORAGE_BUCKET,
